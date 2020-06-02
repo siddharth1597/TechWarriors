@@ -59,8 +59,8 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="62dp"
-            android:layout_marginRight="62dp"
+            android:layout_marginLeft="63dp"
+            android:layout_marginRight="63dp"
             android:layout_marginTop="12.7dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
