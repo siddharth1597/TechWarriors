@@ -6,20 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".Login">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="273dp"
             android:background="@drawable/blue_bg">
-
         </FrameLayout>
-
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -50,11 +45,9 @@
                 android:layout_width="14.7dp"
                 android:layout_height="10.3dp"
                 android:layout_marginLeft="17dp"
-                android:layout_centerVertical="true"
-                />
+                android:layout_centerVertical="true"/>
 
         </RelativeLayout>
-
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -86,13 +79,12 @@
                 android:layout_width="14.7dp"
                 android:layout_height="10.3dp"
                 android:layout_marginLeft="17dp"
-                android:layout_centerVertical="true"
-                />
+                android:layout_centerVertical="true" />
 
         </RelativeLayout>
 
-
-        <TextView
+        <Button
+            android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
@@ -105,18 +97,47 @@
             android:layout_marginRight="62dp"
             android:layout_marginTop="18.7dp"
             android:text="Login"
-            android:background="@drawable/blue_fill__rounded_color"
-            />
+            android:onClick="login"
+            android:background="@drawable/blue_fill__rounded_color" />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/signInButton"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginRight="62dp"
+            android:layout_marginTop="18.7dp"
+            android:onClick="signInButton"/>
+
+        <Button
+            android:id="@+id/btnSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#ffffff"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginRight="62dp"
+            android:layout_marginTop="10dp"
+            android:text="Sign Up"
+            android:onClick="signup"
+            android:background="@drawable/blue_fill__rounded_color" />
 
         <TextView
+            android:id="@+id/tvforget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10.5sp"
             android:textColor="#1566e0"
             android:layout_marginTop="12dp"
             android:layout_gravity="center"
-            android:text="FORGOT PASSWORD ?"
-            />
+            android:onClick="forget"
+            android:text="FORGOT PASSWORD ?" />
 
     </LinearLayout>
 
