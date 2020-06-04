@@ -95,40 +95,39 @@
             android:layout_marginRight="63dp"
             android:orientation="horizontal"
             android:layout_marginTop="12.7dp">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".9"
-            android:background="@drawable/blue_border_rounded_cornwe">
-
-            <EditText
-                android:id="@+id/location"
-                android:layout_toRightOf="@+id/icon"
-                android:hint="Location"
-                android:textSize="12sp"
-                android:paddingLeft="17dp"
-                android:paddingTop="15dp"
-                android:maxLines="1"
-                android:inputType="text"
-                android:paddingBottom="15dp"
-                android:textCursorDrawable="@drawable/cursor_color"
-                android:background="@android:color/transparent"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_weight=".9"
+                android:background="@drawable/blue_border_rounded_cornwe">
 
-            <ImageView
-                android:id="@+id/icon"
-                android:src="@drawable/add_location"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginLeft="17dp"
-                android:layout_centerVertical="true" />
-        </RelativeLayout>
+                <EditText
+                    android:id="@+id/location"
+                    android:layout_toRightOf="@+id/icon"
+                    android:hint="Location"
+                    android:textSize="12sp"
+                    android:paddingLeft="17dp"
+                    android:paddingTop="15dp"
+                    android:maxLines="1"
+                    android:inputType="text"
+                    android:paddingBottom="15dp"
+                    android:textCursorDrawable="@drawable/cursor_color"
+                    android:background="@android:color/transparent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:id="@+id/icon"
+                    android:src="@drawable/add_location"
+                    android:layout_width="14.7dp"
+                    android:layout_height="10.3dp"
+                    android:layout_marginLeft="17dp"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
             <Button
                 android:id="@+id/current_loc"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:onClick="getCurrentLocation"
                 android:drawableLeft="@drawable/current" />
 
 
@@ -146,7 +145,7 @@
             android:layout_marginLeft="62dp"
             android:layout_marginRight="62dp"
             android:layout_marginTop="18.7dp"
-            android:text="Next"
+            android:text="Save"
             android:onClick="next"
             android:background="@drawable/blue_fill__rounded_color" />
 
