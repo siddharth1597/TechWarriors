@@ -94,7 +94,7 @@
                 android:background="@drawable/blue_border_rounded_cornwe">
 
                 <EditText
-                    android:id="@+id/phone_no"
+                    android:id="@+id/phone_no_hosp"
                     android:layout_toRightOf="@+id/icon2"
                     android:hint="Phone Number"
                     android:textSize="12sp"
@@ -130,7 +130,7 @@
                 android:background="@drawable/blue_border_rounded_cornwe">
 
                 <EditText
-                    android:id="@+id/address"
+                    android:id="@+id/address_hosp"
                     android:layout_toRightOf="@+id/ic_beds"
                     android:hint="Address"
                     android:textSize="12sp"

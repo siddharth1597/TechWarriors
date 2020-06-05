@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,11 +39,11 @@ public class Status_Update extends AppCompatActivity {
     EditText etTotal, etVacant, etVentilator,etVacantV;
     Button btsave;
     ImageView img1, img2, img3;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference,databaseReference2;
     ProgressDialog dialog;
-    int total = 0, vacant = 0, venti = 0, id = 1000, vacantVentilator = 0;
+    int total = 0, vacant = 0, venti = 0, id = 1000, vacantVentilator = 0 , j=0,id_forward = 1000;
     int count = 0,flag = 0;
-    List<StatusUpdateDetails> hospitalDetails;
+    List<StatusUpdateDetails> hospitalDetails,hospitals;
     FirebaseAuth auth;
 
     @Override
@@ -93,8 +95,10 @@ public class Status_Update extends AppCompatActivity {
         img3 = findViewById(R.id.icon_vacant_ventilator);
         btsave = findViewById(R.id.save);
         databaseReference = FirebaseDatabase.getInstance().getReference("tblhospitals").child(state).child(city);
+        databaseReference2 = FirebaseDatabase.getInstance().getReference("tblhospitals");
         dialog = new ProgressDialog(this);
         hospitalDetails = new ArrayList<>();
+        hospitals = new ArrayList<>();
         auth = FirebaseAuth.getInstance();
     }
 
@@ -131,10 +135,10 @@ public class Status_Update extends AppCompatActivity {
             venti = Integer.parseInt(etVentilator.getText().toString());
             vacantVentilator = Integer.parseInt(etVacantV.getText().toString());
         }
-         existence();
+        existence(i);
     }
 
-    private void existence() {
+    private void existence(int j) {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -153,7 +157,7 @@ public class Status_Update extends AppCompatActivity {
                     dialog.setMessage("Saving");
                     dialog.show();
                     count = (int)dataSnapshot.getChildrenCount();
-                    StatusUpdateDetails ad = new StatusUpdateDetails(i, total, vacant, venti, vacantVentilator,id+count ,name, phone, address, lat, lang,auth.getCurrentUser().getEmail());
+                    StatusUpdateDetails ad = new StatusUpdateDetails(j, total, vacant, venti, vacantVentilator,id+count ,name, phone, address, lat, lang,auth.getCurrentUser().getEmail());
                     databaseReference.child(String.valueOf(id + count)).setValue(ad).
                             addOnCompleteListener(Status_Update.this, new OnCompleteListener<Void>() {
                                 @Override
@@ -184,4 +188,31 @@ public class Status_Update extends AppCompatActivity {
             }
         });
     }
-}
+ public void newCode(){
+          /*   hospitals = new ArrayList<>();
+                  DatabaseReference db = databaseReference2.child(state).child(city);
+                  db.addValueEventListener(new ValueEventListener() {
+                      @Override
+                      public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                          hospitals.clear();
+                          for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
+                              StatusUpdateDetails sd = mySnap.getValue(StatusUpdateDetails.class);
+                              hospitals.add(sd);
+
+                          }
+                          Log.d("size", String.valueOf(hospitals.size()));
+                          for (int m = 0; m < hospitals.size(); m++)
+                              Log.d("HID", String.valueOf(hospitals.get(m).getKey()));
+                          id_forward = hospitals.get(hospitals.size() - 1).getKey();
+                          Log.e("Hospital_ID", String.valueOf(id_forward));
+
+                      }
+
+                      @Override
+                      public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                      }
+                  });
+                  Log.e("Return_ID", String.valueOf(id_forward));*/
+ }
+    }

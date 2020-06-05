@@ -1,6 +1,8 @@
 package sidsim.techwarriors;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -60,5 +62,27 @@ public class Dashboard extends AppCompatActivity {
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Exit App");
+        builder.setMessage("Do you want to exit this application??");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finishAffinity();
+                System.exit(0);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

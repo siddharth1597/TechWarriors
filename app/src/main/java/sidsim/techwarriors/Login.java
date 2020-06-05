@@ -50,19 +50,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Login extends AppCompatActivity implements View.OnClickListener {
-    EditText etPass,etEmail;
-    ImageView imgEmail,imgPass;
-    Button btnLogin,btnSignUp;
+    EditText etPass, etEmail;
+    ImageView imgEmail, imgPass;
+    Button btnLogin, btnSignUp;
     TextView tvForget;
     FirebaseAuth auth;
     ProgressDialog dialog;
     SignInButton signInButton;
     GoogleSignInClient googleSignInClient;
     GoogleSignInOptions gso;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, databaseReference2;
     FirebaseUser user;
-    int flag = 0;
+    int flag = 0 , flg = 0;
+    String email = "";
     List<RegistrationDetails> registrationDetails;
+    List<StatusUpdateDetails> hospitalDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +75,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             permission();
         }
         setIds();
-        if(user!= null){
-            startActivity(new Intent(this,BasicDetails.class));
+        if (user != null) {
+            intent();
         }
         FirebaseApp.initializeApp(this);
     }
 
-  private void setIds() {
+    private void setIds() {
         etEmail = findViewById(R.id.username_input);
         etPass = findViewById(R.id.pass);
         btnLogin = findViewById(R.id.btnLogin);
@@ -92,20 +94,23 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         signInButton = findViewById(R.id.signInButton);
         signInButton.setOnClickListener(this);
         gso = new GoogleSignInOptions.Builder(
-              GoogleSignInOptions.DEFAULT_SIGN_IN)
-              .requestIdToken(getString(R.string.default_web_client_id))
-              .requestEmail()
-              .requestProfile()
-              .build();
+                GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .requestProfile()
+                .build();
         user = auth.getCurrentUser();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
         registrationDetails = new ArrayList<>();
         databaseReference = FirebaseDatabase.getInstance().getReference("tblregister");
-  }
+        databaseReference2 = FirebaseDatabase.getInstance().getReference("tblhospitals");
+        hospitalDetails = new ArrayList<>();
+
+    }
 
     private void permission() {
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (permission == PackageManager.PERMISSION_DENIED ) {
+        if (permission == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
         }
     }
@@ -146,36 +151,36 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void login(View view) {
-        if(!(etEmail.length()==0 || etPass.length()==0)){
-            if(!(etPass.length() < 6))
-                    authenticate();
+        if (!(etEmail.length() == 0 || etPass.length() == 0)) {
+            if (!(etPass.length() < 6))
+                authenticate();
             else
                 Toast.makeText(this, "Password Length more than 6", Toast.LENGTH_SHORT).show();
-        }
-        else
+        } else
             Toast.makeText(this, "Fields can't be left empty", Toast.LENGTH_SHORT).show();
     }
 
     private void authenticate() {
-        String user = etEmail.getText().toString();
+        email = etEmail.getText().toString();
         dialog.setMessage("Logging In");
         dialog.show();
-        auth.signInWithEmailAndPassword(user.trim(),etPass.getText().toString()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        auth.signInWithEmailAndPassword(email.trim(), etPass.getText().toString()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    startActivity(new Intent(Login.this,BasicDetails.class));
+                if (task.isSuccessful()) {
+                    intent();
                     Toast.makeText(Login.this, "Successfully Login!!", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     etEmail.setText("");
                     etPass.setText("");
+                    finish();
                 }
 
             }
         }).addOnFailureListener(this, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Login.this, "Fail to Login "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(Login.this, "Fail to Login " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
                 etEmail.setText("");
                 etPass.setText("");
@@ -184,12 +189,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void signup(View view) {
-        startActivity(new Intent(this,Registration.class));
+        startActivity(new Intent(this, Registration.class));
     }
 
     @Override
     public void onClick(View v) {
-        Log.d("Foolish","Hi");
+        Log.d("Foolish", "Hi");
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 5678);
 
@@ -206,19 +211,19 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void firebaseAuthWithG(Task<GoogleSignInAccount> accountTask) {
-        try{
+        try {
             GoogleSignInAccount acc = accountTask.getResult(ApiException.class);
             Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
             firebaseAuthWithGoogle(acc);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
             firebaseAuthWithGoogle(null);
         }
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        if(account == null)
+        if (account == null)
             Toast.makeText(this, "No acc exists", Toast.LENGTH_SHORT).show();
         else {
             AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
@@ -228,8 +233,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = auth.getCurrentUser();
-                                dbreg(user.getEmail());
-                                startActivity(new Intent(Login.this, BasicDetails.class));
+                                email = user.getEmail();
+                                dbreg(email);
+                                intent();
 
                             } else {
                                 Log.w("TAG", "signInWithCredential:failure ", task.getException());
@@ -240,12 +246,22 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+    private void intent() {
+        int pass = 0;
+        if(pass == 0)
+            startActivity(new Intent(this,BasicDetails.class));
+        else
+            startActivity(new Intent(this,Dashboard.class));
+        finish();
+
+    }
+
     private void dbreg(String email) {
         dialog.setMessage("Login");
 
         dialog.show();
         String key = databaseReference.push().getKey();
-        RegistrationDetails ad = new RegistrationDetails("", email, "" ,key);
+        RegistrationDetails ad = new RegistrationDetails("", email, "", key);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -255,34 +271,33 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     RegistrationDetails rd = mySnap.getValue(RegistrationDetails.class);
                     registrationDetails.add(rd);
                     if ((registrationDetails.get(i).getEmail().equals(email))) {
-                            flag = 1;
-                            break;
+                        flag = 1;
+                        break;
                     }
                     i++;
                 }
-                if(flag == 0){
-                     databaseReference.child(key).setValue(ad).
-                                addOnCompleteListener(Login.this, new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(Login.this, "Data Saved Successful", Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
-
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(Login.this, new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(Login.this, "Data Saving Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                if (flag == 0) {
+                    databaseReference.child(key).setValue(ad).
+                            addOnCompleteListener(Login.this, new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(Login.this, "Data Saved Successful", Toast.LENGTH_SHORT).show();
                                         dialog.dismiss();
+
                                     }
-                                });
+                                }
+                            })
+                            .addOnFailureListener(Login.this, new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(Login.this, "Data Saving Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+                            });
 
                 }
             }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -291,5 +306,66 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         });
 
 
+    }
+
+    private int getData() {
+        hospitalDetails = new ArrayList<>();
+        databaseReference2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                hospitalDetails.clear();
+                int i = 0;
+                for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
+                    Toast.makeText(Login.this, String.valueOf(dataSnapshot.getChildrenCount()), Toast.LENGTH_SHORT).show();
+                    Log.d("Key--1",String.valueOf(mySnap.getKey()));
+                    DatabaseReference db = databaseReference2.child(mySnap.getKey());
+                    db.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
+                                Log.d("Child--",mySnap.getKey());
+                                db.child(mySnap.getKey()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        int i = 0;
+                                        hospitalDetails.clear();
+                                        for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
+                                            Log.d("Avail--",mySnap.getKey());
+                                            StatusUpdateDetails sd = mySnap.getValue(StatusUpdateDetails.class);
+                                            hospitalDetails.add(sd);
+                                            if (String.valueOf(hospitalDetails.get(i).getEmail()).equals(email)) {
+                                                flg = 1;
+                                                break;
+                                            }
+                                            i++;
+
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return flg;
     }
 }
