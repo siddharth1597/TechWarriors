@@ -102,7 +102,7 @@
             android:background="@drawable/blue_border_rounded_cornwe">
 
             <EditText
-                android:id="@+id/location"
+                android:id="@+id/cur_location"
                 android:layout_toRightOf="@+id/icon"
                 android:hint="Location"
                 android:textSize="12sp"

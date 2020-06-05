@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,20 +21,35 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-public class Login extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Login extends AppCompatActivity implements View.OnClickListener {
     EditText etPass,etEmail;
     ImageView imgEmail,imgPass;
     Button btnLogin,btnSignUp;
@@ -41,6 +57,12 @@ public class Login extends AppCompatActivity {
     FirebaseAuth auth;
     ProgressDialog dialog;
     SignInButton signInButton;
+    GoogleSignInClient googleSignInClient;
+    GoogleSignInOptions gso;
+    DatabaseReference databaseReference;
+    FirebaseUser user;
+    int flag = 0;
+    List<RegistrationDetails> registrationDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +73,9 @@ public class Login extends AppCompatActivity {
             permission();
         }
         setIds();
+        if(user!= null){
+            startActivity(new Intent(this,BasicDetails.class));
+        }
         FirebaseApp.initializeApp(this);
     }
 
@@ -65,6 +90,17 @@ public class Login extends AppCompatActivity {
         dialog = new ProgressDialog(this);
         auth = FirebaseAuth.getInstance();
         signInButton = findViewById(R.id.signInButton);
+        signInButton.setOnClickListener(this);
+        gso = new GoogleSignInOptions.Builder(
+              GoogleSignInOptions.DEFAULT_SIGN_IN)
+              .requestIdToken(getString(R.string.default_web_client_id))
+              .requestEmail()
+              .requestProfile()
+              .build();
+        user = auth.getCurrentUser();
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+        registrationDetails = new ArrayList<>();
+        databaseReference = FirebaseDatabase.getInstance().getReference("tblregister");
   }
 
     private void permission() {
@@ -122,7 +158,6 @@ public class Login extends AppCompatActivity {
 
     private void authenticate() {
         String user = etEmail.getText().toString();
-        Toast.makeText(this, "-----"+user+"------", Toast.LENGTH_SHORT).show();
         dialog.setMessage("Logging In");
         dialog.show();
         auth.signInWithEmailAndPassword(user.trim(),etPass.getText().toString()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -152,7 +187,109 @@ public class Login extends AppCompatActivity {
         startActivity(new Intent(this,Registration.class));
     }
 
-    public void signInButton(View view) {
+    @Override
+    public void onClick(View v) {
+        Log.d("Foolish","Hi");
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, 5678);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 5678) {
+            Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
+            firebaseAuthWithG(accountTask);
+        }
+
+    }
+
+    private void firebaseAuthWithG(Task<GoogleSignInAccount> accountTask) {
+        try{
+            GoogleSignInAccount acc = accountTask.getResult(ApiException.class);
+            Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
+            firebaseAuthWithGoogle(acc);
+
+        }catch (Exception e){
+            Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
+            firebaseAuthWithGoogle(null);
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        if(account == null)
+            Toast.makeText(this, "No acc exists", Toast.LENGTH_SHORT).show();
+        else {
+            AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+            auth.signInWithCredential(credential)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = auth.getCurrentUser();
+                                dbreg(user.getEmail());
+                                startActivity(new Intent(Login.this, BasicDetails.class));
+
+                            } else {
+                                Log.w("TAG", "signInWithCredential:failure ", task.getException());
+                                Toast.makeText(Login.this, "Authentication failed!!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void dbreg(String email) {
+        dialog.setMessage("Login");
+
+        dialog.show();
+        String key = databaseReference.push().getKey();
+        RegistrationDetails ad = new RegistrationDetails("", email, "" ,key);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                registrationDetails.clear();
+                int i = 0;
+                for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
+                    RegistrationDetails rd = mySnap.getValue(RegistrationDetails.class);
+                    registrationDetails.add(rd);
+                    if ((registrationDetails.get(i).getEmail().equals(email))) {
+                            flag = 1;
+                            break;
+                    }
+                    i++;
+                }
+                if(flag == 0){
+                     databaseReference.child(key).setValue(ad).
+                                addOnCompleteListener(Login.this, new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(Login.this, "Data Saved Successful", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(Login.this, new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(Login.this, "Data Saving Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
     }
 }

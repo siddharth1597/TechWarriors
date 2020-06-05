@@ -110,7 +110,7 @@ public class Registration extends AppCompatActivity {
 
     private void dbreg() {
         String key = databaseReference.push().getKey();
-        RegistrationDetails ad = new RegistrationDetails( etName.getText().toString(), etEmail.getText().toString(), etPass.getText().toString());
+        RegistrationDetails ad = new RegistrationDetails( etName.getText().toString(), etEmail.getText().toString(), etPass.getText().toString(),key);
         databaseReference.child(key).setValue(ad).
                 addOnCompleteListener(Registration.this, new OnCompleteListener<Void>() {
                     @Override

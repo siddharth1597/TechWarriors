@@ -29,5 +29,13 @@
         <item>Viveknanda</item>
         <item>Kothiwal Hospital</item>
     </string-array>
+    <string name="title_activity_main__maps_view">Map</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="MapView">Hospital Status Map</string>
+    <string name="normal">Hospital Status</string>
+    <string name="about">About</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
 
