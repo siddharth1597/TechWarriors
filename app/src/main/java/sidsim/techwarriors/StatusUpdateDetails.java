@@ -8,11 +8,13 @@ public class StatusUpdateDetails {
     String location_lat;
     String location_long;
     String email;
+    String state;
+    String city;
     public StatusUpdateDetails() {
         //Reading
     }
 
-    public StatusUpdateDetails(int status, int totalBeds, int vacantBeds, int ventilators,int vacantVentilaor,int key,String name,String phone,String add , String lat,String lang,String email) {
+    public StatusUpdateDetails(int status, int totalBeds, int vacantBeds, int ventilators,int vacantVentilaor,int key,String name,String phone,String add , String lat,String lang,String email,String state,String city) {
         this.status = status;
         this.totalBeds = totalBeds;
         this.vacantBeds = vacantBeds;
@@ -25,6 +27,9 @@ public class StatusUpdateDetails {
         this.email = email;
         this.key= key;
         this.vacantVentilaor = vacantVentilaor;
+        this.state = state;
+        this.city = city;
+
     }
 
     public int getStatus() { return status; }
@@ -57,4 +62,20 @@ public class StatusUpdateDetails {
     public int getVacantVentilaor() { return vacantVentilaor; }
 
     public int getKey() { return key; }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 }

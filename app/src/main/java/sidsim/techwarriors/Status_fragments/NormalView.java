@@ -35,20 +35,21 @@ import sidsim.techwarriors.R;
 import sidsim.techwarriors.StatusUpdateDetails;
 import sidsim.techwarriors.Status_Update;
 
-public class NormalView extends Fragment {
-Button edit, update;
-Switch available;
-EditText name, address, total_vent, vac_vent, total_bed, vac_bed, phone_no;
+public class NormalView extends Fragment implements View.OnClickListener {
+    Button edit, update;
+    Switch available;
+    EditText name, address, total_vent, vac_vent, total_bed, vac_bed, phone_no;
 
 
-    String hospital_name="";
-    String hospital_address="",phoneno,latitude,longitude;
-    int hospital_availability =0,count = 0;
-    int hospital_totalbeds =0, hospital_occupiedbeds=0, hospital_vacantbeds=0; //beds
-    int hospital_total_vent =0, hospital_occupied_vent=0, hospital_vacant_vent=0; //ventilators
+    String hospital_name = "",state , city;
+    String hospital_address = "", phoneno, latitude, longitude;
+    int hospital_availability = 0, count = 0;
+    int hospital_totalbeds = 0, hospital_occupiedbeds = 0, hospital_vacantbeds = 0; //beds
+    int hospital_total_vent = 0, hospital_occupied_vent = 0, hospital_vacant_vent = 0; //ventilators
+    int avl = 0 , flg = 0;
     DatabaseReference databaseReference;
     FirebaseAuth auth;
-    List<StatusUpdateDetails> hospitalDetails,hospitals,updateDetails;
+    List<StatusUpdateDetails> hospitalDetails, hospitals, updateDetails;
     ProgressDialog dialog;
 
     @Override
@@ -96,109 +97,7 @@ EditText name, address, total_vent, vac_vent, total_bed, vac_bed, phone_no;
                 phone_no.setEnabled(true);
             }
         });
-
-        update.setOnClickListener(new View.OnClickListener() {
-            int avl = 0;
-            @Override
-            public void onClick(View view) {
-                dialog.setMessage("Updating");
-                dialog.show();
-                boolean avail = available.isChecked();
-                if(avail)
-                    avl = 1;
-                String hosp_name = name.getText().toString().trim();
-                String hosp_add = address.getText().toString().trim();
-                String total_beds = total_bed.getText().toString().trim();
-                String total_ven = total_vent.getText().toString().trim();
-                String vacant_ven = vac_vent.getText().toString().trim();
-                String vacant_bed = vac_bed.getText().toString().trim();
-                String phone = phone_no.getText().toString().trim();
-
-
-                databaseReference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot mySnap : dataSnapshot.getChildren()){
-                            DatabaseReference db = databaseReference.child(mySnap.getKey());
-                            Log.d("KeyUpper",mySnap.getKey());
-                            db.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    for(DataSnapshot mySnap:dataSnapshot.getChildren()){
-                                      Log.d("KeyLower",mySnap.getKey());
-                                      DatabaseReference sb2 =db.child(mySnap.getKey());
-                                      sb2.addValueEventListener(new ValueEventListener() {
-                                          @Override
-                                          public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                              updateDetails.clear();
-                                              int i = 0;
-                                              for(DataSnapshot mySnap:dataSnapshot.getChildren()){
-                                                  StatusUpdateDetails sd = mySnap.getValue(StatusUpdateDetails.class);
-                                                  updateDetails.add(sd);
-                                                  if(String.valueOf(updateDetails.get(i).getEmail()).equals(auth.getCurrentUser().getEmail())){
-                                                      StatusUpdateDetails ad = new StatusUpdateDetails(avl, Integer.parseInt(total_beds), Integer.parseInt(vacant_bed), Integer.parseInt(total_ven),
-                                                              Integer.parseInt(vacant_ven),updateDetails.get(i).getKey() ,
-                                                              hosp_name, phone, hosp_add, latitude, longitude,auth.getCurrentUser().getEmail());
-                                                      sb2.child(String.valueOf(updateDetails.get(i).getKey())).setValue(ad).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                          @Override
-                                                          public void onComplete(@NonNull Task<Void> task) {
-                                                              if (task.isSuccessful()) {
-                                                                  Toast.makeText(getContext(), "Data Updated Successful", Toast.LENGTH_SHORT).show();
-                                                                  dialog.dismiss();
-                                                                  available.setEnabled(false);
-                                                                  name.setEnabled(false);
-                                                                  address.setEnabled(false);
-                                                                  total_bed.setEnabled(false);
-                                                                  total_vent.setEnabled(false);
-                                                                  vac_bed.setEnabled(false);
-                                                                  vac_vent.setEnabled(false);
-                                                                  phone_no.setEnabled(false);
-                                                              }
-                                                          }
-                                                      }).addOnFailureListener(new OnFailureListener() {
-                                                          @Override
-                                                          public void onFailure(@NonNull Exception e) {
-                                                              Toast.makeText(getContext(), "Data Saving Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                              dialog.dismiss();
-                                                              name.setText("");
-                                                              address.setText("");
-                                                              total_bed.setText("");
-                                                              total_vent.setText("");
-                                                              vac_bed.setText("");
-                                                              vac_vent.setText("");
-                                                              phone_no.setText("");
-                                                          }
-                                                      });
-                                                      break;
-                                                  }
-                                                  i++;
-                                              }
-
-                                          }
-
-                                          @Override
-                                          public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                          }
-                                      });
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        });
+        update.setOnClickListener(this);
 
         return v;
     }
@@ -210,14 +109,14 @@ EditText name, address, total_vent, vac_vent, total_bed, vac_bed, phone_no;
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     hospitalDetails.clear();
                     int i = 0;
-                    Log.d("Check 1 --","Hello");
-                   for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
+                    Log.d("Check 1 --", "Hello");
+                    for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
                         DatabaseReference db = databaseReference.child(mySnap.getKey());
-                        Log.d("Check 2 --","Hello");
+                        Log.d("Check 2 --", "Hello");
                         db.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                Log.d("Check 3 --","Hello");
+                                Log.d("Check 3 --", "Hello");
                                 for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
                                     db.child(mySnap.getKey()).addValueEventListener(new ValueEventListener() {
                                         @Override
@@ -228,8 +127,8 @@ EditText name, address, total_vent, vac_vent, total_bed, vac_bed, phone_no;
                                             for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
                                                 StatusUpdateDetails sd = mySnap.getValue(StatusUpdateDetails.class);
                                                 hospitalDetails.add(sd);
-                                                Log.d("Check 4 --","Hello");
-                                                Log.d("Check 5 --",hospitalDetails.get(i).getEmail());
+                                                Log.d("Check 4 --", "Hello");
+                                                Log.d("Check 5 --", hospitalDetails.get(i).getEmail());
 
                                                 if (String.valueOf(hospitalDetails.get(i).getEmail()).equals(auth.getCurrentUser().getEmail())) {
                                                     hospital_availability = hospitalDetails.get(i).getStatus();
@@ -242,11 +141,13 @@ EditText name, address, total_vent, vac_vent, total_bed, vac_bed, phone_no;
                                                     hospital_vacantbeds = hospitalDetails.get(i).getVacantBeds();
                                                     hospital_total_vent = hospitalDetails.get(i).getVentilators();
                                                     hospital_vacant_vent = hospitalDetails.get(i).getVacantVentilaor();
+                                                    state = hospitalDetails.get(i).getState();
+                                                    city = hospitalDetails.get(i).getCity();
                                                     break;
                                                 }
                                                 i++;
                                             }
-                                           setData();
+                                            setData();
                                         }
 
                                         @Override
@@ -271,12 +172,13 @@ EditText name, address, total_vent, vac_vent, total_bed, vac_bed, phone_no;
                 }
             });
 
-        }catch (Exception e){
-            Log.e("Error",e.getMessage());
+        } catch (Exception e) {
+            Log.e("Error", e.getMessage());
         }
 
     }
-    private void setData(){
+
+    private void setData() {
         try {
             if (hospital_availability == 0)
                 available.setChecked(false);
@@ -289,13 +191,12 @@ EditText name, address, total_vent, vac_vent, total_bed, vac_bed, phone_no;
             vac_vent.setText(String.valueOf(hospital_vacant_vent));
             vac_bed.setText(String.valueOf(hospital_vacantbeds));
             phone_no.setText(phoneno);
-        }
-        catch (Exception e){
-            Log.e("Error",e.getMessage());
+        } catch (Exception e) {
+            Log.e("Error", e.getMessage());
         }
     }
 
-   private void getHospital() {
+    private void getHospital() {
         hospitals = new ArrayList<>();
         DatabaseReference db = databaseReference.child("Uttar Pradesh").child("Moradabad");
         db.addValueEventListener(new ValueEventListener() {
@@ -307,17 +208,17 @@ EditText name, address, total_vent, vac_vent, total_bed, vac_bed, phone_no;
                     hospitals.add(sd);
 
                 }
-                Log.d("size",String.valueOf(hospitals.size()));
-                for(int i = 0 ;i < hospitals.size();i++){
-                    Log.d("name"+i,hospitals.get(i).getName());
-                    Log.d( "Availability"+i,String.valueOf(hospitals.get(i).getStatus()));
-                    Log.d("Beds"+i,String.valueOf(hospitals.get(i).getTotalBeds()));
-                    Log.d("Address"+i, hospitals.get(i).getLocation_add());
-                    Log.d("Name"+i,hospitals.get(i).getName());
-                     Log.d("Phone"+i,String.valueOf( hospitals.get(i).getPhone()));
-                    Log.d( "Vacant Beds"+i,String.valueOf(hospitals.get(i).getVacantBeds()));
-                     Log.d("Ventilators"+i,String.valueOf(hospitals.get(i).getVentilators()));
-                     Log.d("Vacant Ventilators"+i,String.valueOf(hospitals.get(i).getVacantVentilaor()));
+                Log.d("size", String.valueOf(hospitals.size()));
+                for (int i = 0; i < hospitals.size(); i++) {
+                    Log.d("name" + i, hospitals.get(i).getName());
+                    Log.d("Availability" + i, String.valueOf(hospitals.get(i).getStatus()));
+                    Log.d("Beds" + i, String.valueOf(hospitals.get(i).getTotalBeds()));
+                    Log.d("Address" + i, hospitals.get(i).getLocation_add());
+                    Log.d("Name" + i, hospitals.get(i).getName());
+                    Log.d("Phone" + i, String.valueOf(hospitals.get(i).getPhone()));
+                    Log.d("Vacant Beds" + i, String.valueOf(hospitals.get(i).getVacantBeds()));
+                    Log.d("Ventilators" + i, String.valueOf(hospitals.get(i).getVentilators()));
+                    Log.d("Vacant Ventilators" + i, String.valueOf(hospitals.get(i).getVacantVentilaor()));
                 }
 
             }
@@ -330,5 +231,117 @@ EditText name, address, total_vent, vac_vent, total_bed, vac_bed, phone_no;
 
     }
 
+    @Override
+    public void onClick(View v) {
+
+            dialog.setMessage("Updating");
+            dialog.show();
+            boolean avail = available.isChecked();
+            if(avail)
+                avl = 1;
+            String hosp_name = name.getText().toString().trim();
+            String hosp_add = address.getText().toString().trim();
+            String total_beds = total_bed.getText().toString().trim();
+            String total_ven = total_vent.getText().toString().trim();
+            String vacant_ven = vac_vent.getText().toString().trim();
+            String vacant_bed = vac_bed.getText().toString().trim();
+            String phone = phone_no.getText().toString().trim();
+
+
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot mySnap : dataSnapshot.getChildren()){
+                        DatabaseReference db = databaseReference.child(mySnap.getKey());
+                        Log.d("KeyUpper",mySnap.getKey());
+                        db.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for(DataSnapshot mySnap:dataSnapshot.getChildren()){
+                                    Log.d("KeyLower",mySnap.getKey());
+                                    DatabaseReference sb2 =db.child(mySnap.getKey());
+                                    sb2.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            updateDetails.clear();
+                                            int i = 0;
+                                            for(DataSnapshot mySnap:dataSnapshot.getChildren()){
+                                                StatusUpdateDetails sd = mySnap.getValue(StatusUpdateDetails.class);
+                                                updateDetails.add(sd);
+                                                if(String.valueOf(updateDetails.get(i).getEmail()).equals(auth.getCurrentUser().getEmail())){
+                                                    StatusUpdateDetails ad = new StatusUpdateDetails(avl, Integer.parseInt(total_beds), Integer.parseInt(vacant_bed), Integer.parseInt(total_ven),
+                                                            Integer.parseInt(vacant_ven),updateDetails.get(i).getKey() ,
+                                                            hosp_name, phone, hosp_add, latitude, longitude,auth.getCurrentUser().getEmail(),state,city);
+                                                    sb2.child(String.valueOf(updateDetails.get(i).getKey())).setValue(ad).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                change();
+                                                                flg = 1;
+                                                            }
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(getContext(), "Data Saving Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            dialog.dismiss();
+                                                            name.setText("");
+                                                            address.setText("");
+                                                            total_bed.setText("");
+                                                            total_vent.setText("");
+                                                            vac_bed.setText("");
+                                                            vac_vent.setText("");
+                                                            phone_no.setText("");
+                                                        }
+                                                    });
+                                                    if(flg == 1)
+                                                    break;
+                                                }
+                                                i++;
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                    if (flg == 1)
+                                        break;
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        if (flg == 1)
+                            break;
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+    }
+
+    public void change(){
+        Toast.makeText(getContext(), "Data Updated Successful", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
+        available.setEnabled(false);
+        name.setEnabled(false);
+        address.setEnabled(false);
+        total_bed.setEnabled(false);
+        total_vent.setEnabled(false);
+        vac_bed.setEnabled(false);
+        vac_vent.setEnabled(false);
+        phone_no.setEnabled(false);
+    }
 }
+
 

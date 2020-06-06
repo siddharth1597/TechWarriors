@@ -61,10 +61,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     GoogleSignInOptions gso;
     DatabaseReference databaseReference, databaseReference2;
     FirebaseUser user;
-    int flag = 0 , flg = 0;
+    int flag = 0;
+    int flg=0;
     String email = "";
     List<RegistrationDetails> registrationDetails;
     List<StatusUpdateDetails> hospitalDetails;
+    TextView hidden;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +78,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         }
         setIds();
         if (user != null) {
-            intent();
+          startActivity(new Intent(this,BasicDetails.class));
         }
         FirebaseApp.initializeApp(this);
     }
 
     private void setIds() {
+        hidden = findViewById(R.id.hidden);
         etEmail = findViewById(R.id.username_input);
         etPass = findViewById(R.id.pass);
         btnLogin = findViewById(R.id.btnLogin);
@@ -168,7 +171,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    intent();
+                   intent();
                     Toast.makeText(Login.this, "Successfully Login!!", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                     etEmail.setText("");
@@ -236,7 +239,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                 email = user.getEmail();
                                 dbreg(email);
                                 intent();
-
                             } else {
                                 Log.w("TAG", "signInWithCredential:failure ", task.getException());
                                 Toast.makeText(Login.this, "Authentication failed!!", Toast.LENGTH_SHORT).show();
@@ -247,11 +249,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void intent() {
-        int pass = 0;
-        if(pass == 0)
-            startActivity(new Intent(this,BasicDetails.class));
-        else
-            startActivity(new Intent(this,Dashboard.class));
+        getData();
+        int flg = Integer.valueOf(hidden.getText().toString());
+        Toast.makeText(this, "intent: "+flg, Toast.LENGTH_SHORT).show();
+        if(flg ==1) {
+            hidden.setText("0");
+            startActivity(new Intent(this, Dashboard.class));
+        }
+        else {
+            hidden.setText("0");
+            startActivity(new Intent(this, BasicDetails.class));
+        }
         finish();
 
     }
@@ -308,13 +316,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     }
 
-    private int getData() {
+    private void getData() {
+
         hospitalDetails = new ArrayList<>();
         databaseReference2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 hospitalDetails.clear();
-                int i = 0;
                 for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
                     Toast.makeText(Login.this, String.valueOf(dataSnapshot.getChildrenCount()), Toast.LENGTH_SHORT).show();
                     Log.d("Key--1",String.valueOf(mySnap.getKey()));
@@ -333,8 +341,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                             Log.d("Avail--",mySnap.getKey());
                                             StatusUpdateDetails sd = mySnap.getValue(StatusUpdateDetails.class);
                                             hospitalDetails.add(sd);
-                                            if (String.valueOf(hospitalDetails.get(i).getEmail()).equals(email)) {
-                                                flg = 1;
+                                            Log.d("Email---",email.trim());
+                                            Log.d("Email2---",hospitalDetails.get(i).getEmail().trim());
+                                            if (hospitalDetails.get(i).getEmail().trim().equals(email.trim())) {
+                                                custom(1);
                                                 break;
                                             }
                                             i++;
@@ -348,6 +358,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                                     }
                                 });
+
+                                if(flg==1)
+                                {
+                                    break;
+                                }
                             }
                         }
 
@@ -357,7 +372,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         }
                     });
 
+
+
+                    if(flg==1)
+                    {
+                        break;
+                    }
                 }
+
             }
 
             @Override
@@ -366,6 +388,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             }
         });
 
-        return flg;
+
+    }
+
+    private void custom(int i) {
+        flg = i;
     }
 }

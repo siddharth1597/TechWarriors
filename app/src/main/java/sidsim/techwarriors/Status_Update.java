@@ -157,7 +157,7 @@ public class Status_Update extends AppCompatActivity {
                     dialog.setMessage("Saving");
                     dialog.show();
                     count = (int)dataSnapshot.getChildrenCount();
-                    StatusUpdateDetails ad = new StatusUpdateDetails(j, total, vacant, venti, vacantVentilator,id+count ,name, phone, address, lat, lang,auth.getCurrentUser().getEmail());
+                    StatusUpdateDetails ad = new StatusUpdateDetails(j, total, vacant, venti, vacantVentilator,id+count ,name, phone, address, lat, lang,auth.getCurrentUser().getEmail(),state,city);
                     databaseReference.child(String.valueOf(id + count)).setValue(ad).
                             addOnCompleteListener(Status_Update.this, new OnCompleteListener<Void>() {
                                 @Override

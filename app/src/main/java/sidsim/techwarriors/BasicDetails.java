@@ -61,7 +61,8 @@ public class BasicDetails extends AppCompatActivity {
         setContentView(R.layout.activity_basic_details);
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("tblhospitals");
-        //getData();
+
+        getData();
         setIds();
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         FirebaseApp.initializeApp(this);
@@ -214,5 +215,66 @@ public class BasicDetails extends AppCompatActivity {
         }
     }
 
+    private void getData() {
+
+        hospitalDetails = new ArrayList<>();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                hospitalDetails.clear();
+                for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
+                    Log.d("Key--1",String.valueOf(mySnap.getKey()));
+                    DatabaseReference db = databaseReference.child(mySnap.getKey());
+                    db.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
+                                Log.d("Child--",mySnap.getKey());
+                                db.child(mySnap.getKey()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        int i = 0;
+                                        hospitalDetails.clear();
+                                        for (DataSnapshot mySnap : dataSnapshot.getChildren()) {
+                                            Log.d("Avail--",mySnap.getKey());
+                                            StatusUpdateDetails sd = mySnap.getValue(StatusUpdateDetails.class);
+                                            hospitalDetails.add(sd);
+                                            Log.d("Email2---",hospitalDetails.get(i).getEmail().trim());
+                                            if (hospitalDetails.get(i).getEmail().trim().equals(auth.getCurrentUser().getEmail())){
+                                             startActivity(new Intent(getApplicationContext(),Dashboard.class));
+                                            }
+                                            i++;
+
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
 
 }

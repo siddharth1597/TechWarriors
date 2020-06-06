@@ -151,7 +151,7 @@ public class Mapview extends Fragment implements LocationListener, OnMapReadyCal
                                         int i =0;
                                         hospitalDetails.clear();
                                         for(DataSnapshot mySnap:dataSnapshot.getChildren()){
-                                           //  Log.d("Avail",mySnap.getKey());
+                                           
                                             StatusUpdateDetails sd = mySnap.getValue(StatusUpdateDetails.class);
                                             hospitalDetails.add(sd);
 
@@ -165,6 +165,7 @@ public class Mapview extends Fragment implements LocationListener, OnMapReadyCal
                                                 hospital_vacantbeds = hospitalDetails.get(i).getVacantBeds();
                                                 hospital_total_vent = hospitalDetails.get(i).getVentilators();
                                                 hospital_vacant_vent = hospitalDetails.get(i).getVacantVentilaor();
+                                                Toast.makeText(getContext(), hospitalDetails.get(i).getState()+hospitalDetails.get(i).getCity(), Toast.LENGTH_SHORT).show();
                                                 break;
                                             }
                                             i++;
