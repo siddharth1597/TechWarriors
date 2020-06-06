@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Status_Update">
 
     <LinearLayout
@@ -13,38 +14,57 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:background="@drawable/blue_bg">
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Live Status of hospital"
+                android:textSize="25dp"
+                android:textColor="@android:color/white"/>
         </FrameLayout>
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Information"
-            android:gravity="center"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="20dp">
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="64dp"
-            android:layout_marginRight="64dp"
-            android:layout_marginTop="36.7dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
             <Switch
                 android:id="@+id/availability"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="17dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
+                android:layout_marginRight="20dp"
                 android:checked="true"
                 android:background="@android:color/transparent"/>
 
             <TextView
-                android:text="Availability"
-                android:textSize="12sp"
+                android:id="@+id/avail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="17dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="20dp"
+                android:layout_toEndOf="@+id/name_avail"
+                android:text="Availability"
+                android:textColor="@color/gray"
+                android:textSize="15sp" />
+            <ImageView
+                android:id="@+id/name_avail"
+                android:src="@drawable/available"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"/>
 
         </RelativeLayout>
@@ -52,8 +72,6 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="63dp"
-            android:layout_marginRight="63dp"
             android:layout_marginTop="12.7dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
@@ -61,8 +79,9 @@
                 android:id="@+id/total_beds"
                 android:layout_toRightOf="@+id/ic_beds"
                 android:hint="Total No of beds"
-                android:textSize="12sp"
-                android:paddingLeft="17dp"
+                android:textSize="15sp"
+                android:paddingLeft="15dp"
+                android:textColor="@color/gray"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
                 android:maxLines="1"
@@ -75,9 +94,9 @@
             <ImageView
                 android:id="@+id/ic_beds"
                 android:src="@drawable/add_location"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginLeft="17dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true" />
 
         </RelativeLayout>
@@ -85,8 +104,6 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="63dp"
-            android:layout_marginRight="63dp"
             android:layout_marginTop="12.7dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
@@ -94,9 +111,11 @@
                 android:id="@+id/vacant_beds"
                 android:layout_toRightOf="@+id/icon_ventialtors"
                 android:hint="Vacant Beds"
-                android:textSize="12sp"
-                android:paddingLeft="17dp"
+                android:textSize="15sp"
+                android:paddingLeft="15dp"
                 android:paddingTop="15dp"
+
+                android:textColor="@color/gray"
                 android:paddingBottom="15dp"
                 android:maxLines="1"
                 android:inputType="number"
@@ -108,17 +127,15 @@
             <ImageView
                 android:id="@+id/icon_ventialtors"
                 android:src="@drawable/add_location"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginLeft="17dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true" />
 
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="63dp"
-            android:layout_marginRight="63dp"
             android:layout_marginTop="12.7dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
@@ -126,11 +143,12 @@
                 android:id="@+id/ventilator"
                 android:layout_toRightOf="@+id/icon_vacant_beds"
                 android:hint="Ventilator"
-                android:textSize="12sp"
-                android:paddingLeft="17dp"
+                android:textSize="15sp"
+                android:paddingLeft="15dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
                 android:maxLines="1"
+                android:textColor="@color/gray"
                 android:inputType="number"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:background="@android:color/transparent"
@@ -140,17 +158,15 @@
             <ImageView
                 android:id="@+id/icon_vacant_beds"
                 android:src="@drawable/add_location"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginLeft="17dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true" />
 
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="63dp"
-            android:layout_marginRight="63dp"
             android:layout_marginTop="12.7dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
@@ -158,12 +174,13 @@
                 android:id="@+id/vacant_ventilator"
                 android:layout_toRightOf="@+id/icon_vacant_ventilator"
                 android:hint="Vacant Ventilator"
-                android:textSize="12sp"
-                android:paddingLeft="17dp"
+                android:textSize="15sp"
+                android:paddingLeft="15dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
                 android:maxLines="1"
                 android:inputType="number"
+                android:textColor="@color/gray"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:background="@android:color/transparent"
                 android:layout_width="match_parent"
@@ -172,9 +189,9 @@
             <ImageView
                 android:id="@+id/icon_vacant_ventilator"
                 android:src="@drawable/add_location"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginLeft="17dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true" />
 
         </RelativeLayout>
@@ -184,19 +201,18 @@
             android:id="@+id/save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textColor="#ffffff"
             android:layout_gravity="center"
             android:gravity="center"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
-            android:layout_marginLeft="62dp"
-            android:layout_marginRight="62dp"
-            android:layout_marginTop="18.7dp"
-            android:text="Save"
+            android:layout_marginTop="20dp"
+            android:text="Finish and Save"
             android:onClick="save"
             android:background="@drawable/blue_fill__rounded_color" />
 
     </LinearLayout>
+    </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>

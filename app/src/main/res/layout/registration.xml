@@ -13,16 +13,30 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="273dp"
+        android:layout_height="150dp"
         android:background="@drawable/blue_bg">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Welcome to Register!"
+            android:textSize="25dp"
+            android:textColor="@android:color/white"
+            android:gravity="center"/>
     </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="12.7dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
             <AutoCompleteTextView
@@ -30,8 +44,10 @@
                 android:layout_toEndOf="@+id/reg_name_icon"
                 android:hint="@string/select_hospital_name"
                 android:completionThreshold="1"
-                android:textSize="14sp"
-                android:paddingStart="10dp"
+                android:textSize="15sp"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/gray"
+                android:paddingStart="15dp"
                 android:paddingTop="15dp"
                 android:maxLines="1"
                 android:inputType="text"
@@ -43,10 +59,10 @@
 
             <ImageView
                 android:id="@+id/reg_name_icon"
-                android:src="@drawable/user"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginStart="10dp"
+                android:src="@drawable/hospital"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"
                 />
 
@@ -55,17 +71,17 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="12.7dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
             <EditText
                 android:id="@+id/email_register"
                 android:layout_toEndOf="@+id/reg_email_icon"
                 android:hint="@string/email"
-                android:textSize="14sp"
-                android:paddingStart="10dp"
+                android:textSize="15sp"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/gray"
+                android:paddingStart="15dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
                 android:maxLines="1"
@@ -77,9 +93,9 @@
             <ImageView
                 android:id="@+id/reg_email_icon"
                 android:src="@drawable/email"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginStart="10dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"/>
 
         </RelativeLayout>
@@ -88,17 +104,17 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="12.7dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
             <EditText
                 android:id="@+id/reg_pass"
                 android:layout_toRightOf="@+id/reg_pass_icon"
                 android:hint="@string/password"
-                android:textSize="14sp"
-                android:paddingStart="10dp"
+                android:textSize="15sp"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/gray"
+                android:paddingStart="15dp"
                 android:paddingTop="15dp"
                 android:maxLines="1"
                 android:inputType="textPassword"
@@ -112,9 +128,9 @@
             <ImageView
                 android:id="@+id/reg_pass_icon"
                 android:src="@drawable/password"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginStart="10dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"
                 />
 
@@ -123,17 +139,17 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="12.7dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
             <EditText
                 android:id="@+id/reg_retype_pass"
                 android:layout_toRightOf="@+id/reg_retype_pass_icon"
                 android:hint="@string/retype_password"
-                android:textSize="14sp"
-                android:paddingStart="10dp"
+                android:textSize="15sp"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/gray"
+                android:paddingStart="15dp"
                 android:paddingTop="15dp"
                 android:maxLines="1"
                 android:inputType="textPassword"
@@ -147,9 +163,9 @@
             <ImageView
                 android:id="@+id/reg_retype_pass_icon"
                 android:src="@drawable/password"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginStart="10dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"
                 />
 
@@ -159,21 +175,17 @@
             android:id="@+id/reg_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textColor="#ffffff"
             android:layout_gravity="center"
             android:gravity="center"
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp"
-            android:layout_marginLeft="62dp"
-            android:layout_marginRight="62dp"
-            android:layout_marginTop="18.7dp"
+            android:layout_marginTop="20dp"
             android:text="Register"
             android:onClick="register"
             android:background="@drawable/blue_fill__rounded_color"
             />
 
-
+    </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

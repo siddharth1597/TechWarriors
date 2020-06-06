@@ -11,33 +11,42 @@
         android:orientation="vertical">
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="273dp"
+            android:layout_height="200dp"
             android:background="@drawable/blue_bg">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Basic Information"
+                android:textSize="25dp"
+                android:textColor="@android:color/white"
+                android:gravity="center"/>
         </FrameLayout>
 
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Information"
-            android:gravity="center"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="64dp"
-            android:layout_marginRight="64dp"
-            android:layout_marginTop="36.7dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
             <EditText
                 android:id="@+id/name"
                 android:layout_toRightOf="@+id/name_icon"
                 android:hint="Hospital Name"
-                android:textSize="12sp"
-                android:paddingLeft="17dp"
+                android:textSize="15sp"
+                android:paddingLeft="15dp"
                 android:paddingTop="15dp"
+                android:textColor="@color/gray"
                 android:paddingBottom="15dp"
                 android:maxLines="1"
+                android:layout_marginRight="20dp"
                 android:inputType="text"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:background="@android:color/transparent"
@@ -46,10 +55,10 @@
 
             <ImageView
                 android:id="@+id/name_icon"
-                android:src="@drawable/email"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginLeft="17dp"
+                android:src="@drawable/hospital"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"/>
 
         </RelativeLayout>
@@ -57,8 +66,6 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="63dp"
-            android:layout_marginRight="63dp"
             android:layout_marginTop="12.7dp"
             android:background="@drawable/blue_border_rounded_cornwe">
 
@@ -66,12 +73,13 @@
                 android:id="@+id/phone"
                 android:layout_toRightOf="@+id/icon2"
                 android:hint="Phone Number"
-                android:textSize="12sp"
-                android:paddingLeft="17dp"
+                android:textSize="15sp"
+                android:paddingLeft="15dp"
                 android:paddingTop="15dp"
                 android:maxLines="1"
                 android:inputType="number"
                 android:paddingBottom="15dp"
+                android:textColor="@color/gray"
                 android:maxLength="10"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:background="@android:color/transparent"
@@ -81,9 +89,9 @@
             <ImageView
                 android:id="@+id/icon2"
                 android:src="@drawable/phone"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginLeft="17dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true" />
 
         </RelativeLayout>
@@ -91,8 +99,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="63dp"
-            android:layout_marginRight="63dp"
             android:orientation="horizontal"
             android:layout_marginTop="12.7dp">
         <RelativeLayout
@@ -104,13 +110,15 @@
             <EditText
                 android:id="@+id/cur_location"
                 android:layout_toRightOf="@+id/icon"
-                android:hint="Location"
-                android:textSize="12sp"
-                android:paddingLeft="17dp"
+                android:hint="Current Location"
+                android:textSize="15sp"
+                android:paddingLeft="15dp"
                 android:paddingTop="15dp"
                 android:maxLines="1"
+                android:layout_marginRight="20dp"
                 android:inputType="text"
                 android:paddingBottom="15dp"
+                android:textColor="@color/gray"
                 android:textCursorDrawable="@drawable/cursor_color"
                 android:background="@android:color/transparent"
                 android:layout_width="match_parent"
@@ -119,16 +127,20 @@
             <ImageView
                 android:id="@+id/icon"
                 android:src="@drawable/add_location"
-                android:layout_width="14.7dp"
-                android:layout_height="10.3dp"
-                android:layout_marginLeft="17dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true" />
         </RelativeLayout>
             <Button
                 android:id="@+id/current_loc"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:onClick="getCurrentLocation"
+                android:paddingLeft="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/small_cicle"
                 android:drawableLeft="@drawable/current" />
 
 
@@ -137,19 +149,18 @@
             android:id="@+id/next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="15sp"
             android:textColor="#ffffff"
             android:layout_gravity="center"
             android:gravity="center"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
-            android:layout_marginLeft="62dp"
-            android:layout_marginRight="62dp"
-            android:layout_marginTop="18.7dp"
+            android:layout_marginTop="20dp"
             android:text="Next"
             android:onClick="next"
             android:background="@drawable/blue_fill__rounded_color" />
 
+    </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

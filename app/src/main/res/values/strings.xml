@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TechWarriors</string>
+    <string name="app_name">Warrior19-Hospital</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="name">Name</string>
@@ -31,9 +31,9 @@
     </string-array>
     <string name="title_activity_main__maps_view">Map</string>
     <string name="title_activity_dashboard">Dashboard</string>
-    <string name="MapView">Hospital Status Map</string>
-    <string name="normal">Hospital Status</string>
-    <string name="about">About</string>
+    <string name="MapView">Hospital on Map</string>
+    <string name="normal">Hospital details</string>
+    <string name="about">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
