@@ -9,14 +9,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,8 +44,8 @@ public class Mapview extends Fragment implements LocationListener, OnMapReadyCal
     String hospital_name="";
     String hospital_address="";
     int hospital_availability =0;
-    int hospital_totalbeds =0, hospital_occupiedbeds=0, hospital_vacantbeds=0; //beds
-    int hospital_total_vent =0, hospital_occupied_vent=0, hospital_vacant_vent=0; //ventilators
+    int hospital_totalbeds =0,  hospital_vacantbeds=0; //beds
+    int hospital_total_vent =0,  hospital_vacant_vent=0; //ventilators
     SupportMapFragment mapFragment;
     DatabaseReference databaseReference;
     FirebaseAuth auth;
@@ -137,7 +135,6 @@ public class Mapview extends Fragment implements LocationListener, OnMapReadyCal
                 hospitalDetails.clear();
                 int i = 0;
                 for(DataSnapshot mySnap : dataSnapshot.getChildren()){
-                    Toast.makeText(getContext(), String.valueOf(dataSnapshot.getChildrenCount()), Toast.LENGTH_SHORT).show();
                     //Log.d("Key",String.valueOf(mySnap.getKey()));
                     DatabaseReference db = databaseReference.child(mySnap.getKey());
                     db.addValueEventListener(new ValueEventListener() {
@@ -151,7 +148,7 @@ public class Mapview extends Fragment implements LocationListener, OnMapReadyCal
                                         int i =0;
                                         hospitalDetails.clear();
                                         for(DataSnapshot mySnap:dataSnapshot.getChildren()){
-                                           
+
                                             StatusUpdateDetails sd = mySnap.getValue(StatusUpdateDetails.class);
                                             hospitalDetails.add(sd);
 
@@ -165,7 +162,6 @@ public class Mapview extends Fragment implements LocationListener, OnMapReadyCal
                                                 hospital_vacantbeds = hospitalDetails.get(i).getVacantBeds();
                                                 hospital_total_vent = hospitalDetails.get(i).getVentilators();
                                                 hospital_vacant_vent = hospitalDetails.get(i).getVacantVentilaor();
-                                                Toast.makeText(getContext(), hospitalDetails.get(i).getState()+hospitalDetails.get(i).getCity(), Toast.LENGTH_SHORT).show();
                                                 break;
                                             }
                                             i++;

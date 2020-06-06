@@ -216,7 +216,6 @@ public class BasicDetails extends AppCompatActivity {
     }
 
     private void getData() {
-
         hospitalDetails = new ArrayList<>();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

@@ -30,8 +30,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Status_Update extends AppCompatActivity {
     String city, state, name, phone, lat, lang, address;
@@ -157,7 +160,10 @@ public class Status_Update extends AppCompatActivity {
                     dialog.setMessage("Saving");
                     dialog.show();
                     count = (int)dataSnapshot.getChildrenCount();
-                    StatusUpdateDetails ad = new StatusUpdateDetails(j, total, vacant, venti, vacantVentilator,id+count ,name, phone, address, lat, lang,auth.getCurrentUser().getEmail(),state,city);
+                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss", Locale.getDefault());
+                    String today_date = df.format(new Date());
+                    Log.e("TAG","date - "+today_date);
+                    StatusUpdateDetails ad = new StatusUpdateDetails(j, total, vacant, venti, vacantVentilator,id+count ,name, phone, address, lat, lang,auth.getCurrentUser().getEmail(),state,city,today_date);
                     databaseReference.child(String.valueOf(id + count)).setValue(ad).
                             addOnCompleteListener(Status_Update.this, new OnCompleteListener<Void>() {
                                 @Override

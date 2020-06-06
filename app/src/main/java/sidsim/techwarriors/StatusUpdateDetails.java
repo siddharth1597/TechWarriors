@@ -10,11 +10,13 @@ public class StatusUpdateDetails {
     String email;
     String state;
     String city;
+    String date;
+
     public StatusUpdateDetails() {
         //Reading
     }
 
-    public StatusUpdateDetails(int status, int totalBeds, int vacantBeds, int ventilators,int vacantVentilaor,int key,String name,String phone,String add , String lat,String lang,String email,String state,String city) {
+    public StatusUpdateDetails(int status, int totalBeds, int vacantBeds, int ventilators,int vacantVentilaor,int key,String name,String phone,String add , String lat,String lang,String email,String state,String city,String date) {
         this.status = status;
         this.totalBeds = totalBeds;
         this.vacantBeds = vacantBeds;
@@ -29,6 +31,7 @@ public class StatusUpdateDetails {
         this.vacantVentilaor = vacantVentilaor;
         this.state = state;
         this.city = city;
+        this.date = date;
 
     }
 
@@ -73,6 +76,14 @@ public class StatusUpdateDetails {
 
     public String getCity() {
         return city;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public void setCity(String city) {
